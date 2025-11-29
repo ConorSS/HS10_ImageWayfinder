@@ -1,7 +1,9 @@
-<script>
-    import Drawer from "$lib/drawer.svelte";
+<h1>Welcome to ImageWayfinder</h1>
 
-</script>
-<h1>Welcome to SvelteKit</h1>
+<ul>
+	<li><a href="canvastest">Canvas test page</a></li>
+	<li><a href="binarizer">Image Binarizer</a></li>
+	<li><a href="imagetographtest">Image to Graph test</a></li>
+	
+</ul>
 
-<Drawer></Drawer>
