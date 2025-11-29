@@ -1,19 +1,20 @@
 <script lang="ts">
 	var canv: HTMLCanvasElement;
 
-	let { 
-		inbuffer = $bindable(null), 
-		outbuffer = $bindable(null),
-	} : { 
-		ImageData?, 
-		ImageData?,
-	} = $props();
+	export function SetImageData(newimage : ImageData) {
+		uploadimage = newimage;
+	}
+
+	export function GetOutBuffer() : ImageData | null {
+		return outbuffer;
+	}
 
 	const WIDTH = 400;
 	const HEIGHT = 400;
 
 	var uploadimage: ImageData | null = $state(null);
 	var imageaverage = $state(0);
+	var outbuffer: ImageData | null = $state(null);
 	function UpdateImage(evt: any) {
 		// tack to SO post: https://stackoverflow.com/questions/7372637/grab-image-from-input-field-to-get-image-data-display-image
 		// this solution is awful, look at the amount of callbacks (so it'll do for now)
@@ -72,7 +73,7 @@
 		}
 		ctx?.putImageData(imageclone, 0, 0);
 
-		outbuffer = ctx.getImageData(0, 0, WIDTH, HEIGHT);
+		outbuffer = ctx?.getImageData(0, 0, WIDTH, HEIGHT) ?? null;
 	});
 </script>
 
@@ -92,7 +93,6 @@
 			{multiplier} <input type="range" min="0" max="2" step="0.01" bind:value={multiplier}/>
 		</div>
 		<div class="void"></div>
-		<button>Send to <i>Image to Graph</i></button>
 	</div>
 </div>
 
