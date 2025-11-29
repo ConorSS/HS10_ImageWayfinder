@@ -27,9 +27,9 @@
 	}
 
 	function RenderGraph() {
-		let spacer = 20;
-		let height = fab.height;
-		let width = fab.width;
+		const spacer = 16;
+		const height = fab.height;
+		const width = fab.width;
 		let points: Circle[][] = [[]];
 		let x = 0;
 		let y = 0;
@@ -56,8 +56,7 @@
 	}
 
 	function DrawValidEdges(x: number, y: number, points: Circle[][]) {
-		let ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-		ctx.getContextAttributes().willReadFrequently = true;
+		let ctx = canvas.getContext("2d", {willReadFrequently: true}) as CanvasRenderingContext2D;
 		let img = ctx.getImageData(0, 0, 400, 400) as ImageData;
 		for (let yOffset = -1; yOffset < 2; yOffset++) {
 			let destY = y + yOffset;
