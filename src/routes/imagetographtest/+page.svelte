@@ -5,6 +5,7 @@
 	const HEIGHT = 400;
 
 	var uploadimage: ImageData | null = $state(null);
+	var imageaverage = $state(0);
 	function UpdateImage(evt: any) {
 		// tack to SO post: https://stackoverflow.com/questions/7372637/grab-image-from-input-field-to-get-image-data-display-image
 		var reader = new FileReader();
@@ -22,34 +23,37 @@
 		console.log(evt.target.files[0]);
 		reader.readAsDataURL(evt.target.files[0]);
 	}
+	var multiplier = $state(0.5);
 	$effect(() => {
 		var ctx = canv.getContext("2d");
 		if (!uploadimage) return;
 		ctx?.putImageData(uploadimage, 0, 0);
-		var imageclone = uploadimage;
+		var imageclone = new ImageData(WIDTH,HEIGHT);
 		// collect average for threshold
 		var avg = 0;
-		for (var i = 0; i < imageclone.data.length; i += 4) {
+		for (var i = 0; i < uploadimage.data.length; i += 4) {
 			avg +=
-				imageclone.data[i + 0] +
-				imageclone.data[i + 1] +
-				imageclone.data[i + 2] +
-				imageclone.data[i + 3];
+				uploadimage.data[i + 0] +
+				uploadimage.data[i + 1] +
+				uploadimage.data[i + 2] +
+				uploadimage.data[i + 3];
 		}
-		avg /= imageclone.data.length * 2;
+		avg /= imageclone.data.length / 4;
+		avg *= multiplier;
+		imageaverage = avg;
 
-		for (var i = 0; i < imageclone.data.length; i += 4) {
+		for (var i = 0; i < uploadimage.data.length; i += 4) {
 			if (
-				imageclone.data[i + 0] +
-					imageclone.data[i + 1] +
-					imageclone.data[i + 2] +
-					imageclone.data[i + 3] <
+				uploadimage.data[i + 0] +
+					uploadimage.data[i + 1] +
+					uploadimage.data[i + 2] +
+					uploadimage.data[i + 3] <
 				avg
 			) {
-				imageclone.data[i + 0] = 0;
+				imageclone.data[i + 0] = 255;
 				imageclone.data[i + 1] = 0;
-				imageclone.data[i + 2] = 0;
-				imageclone.data[i + 3] = 0;
+				imageclone.data[i + 2] = 255;
+				imageclone.data[i + 3] = 255;
 			}
 		}
 		ctx?.putImageData(imageclone, 0, 0);
@@ -64,8 +68,16 @@
 		<div>
 			<p>Upload image;</p>
 			<input type="file" onchange={UpdateImage} />
-			<div class="void"></div>
+			
 		</div>
+		<div>
+			<p>Image average: {imageaverage.toFixed(2)}</p>
+		</div>
+		<div>
+			<p>Multiplier;</p>
+			{multiplier} <input type="range" min="0" max="2" step="0.1" bind:value={multiplier}/>
+		</div>
+		<div class="void"></div>
 	</div>
 </div>
 
