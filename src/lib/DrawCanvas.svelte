@@ -70,7 +70,7 @@
 				let origin = points[y][x];
 				let dest = points[destY][destX];
 
-				let isObstructed: boolean = !Raycast(origin.getXY(), dest.getXY(), xOffset, yOffset, img);
+				let isObstructed: boolean = !Raycast(origin.getRelativeXY(), dest.getRelativeXY(), xOffset, yOffset, img);
 				if (isObstructed) continue;
 
 				let line = new Polyline([origin.getXY(), dest.getXY()]);
