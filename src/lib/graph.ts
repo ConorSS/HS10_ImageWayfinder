@@ -23,7 +23,6 @@ class Graph {
 
 function main() {
     // Create a graph with 3 vertices and 3 edges
-    let V = 3;
     let graph = new Graph(3);
 
     // Now add edges one by one
