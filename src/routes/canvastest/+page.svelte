@@ -3,6 +3,8 @@
 
 </script>
 
-<h1>Welcome to SvelteKit</h1>
+<a href="..">Return to index</a>
+
+<h1>DrawCanvas testing</h1>
 
 <DrawCanvas></DrawCanvas>
