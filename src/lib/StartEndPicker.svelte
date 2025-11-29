@@ -3,9 +3,9 @@
 
 	var canv: HTMLCanvasElement;
 
-    export function LoadImage(newimage: ImageData) {
+    // export function LoadImage(newimage: ImageData) {
 
-    }
+    // }
 
 	export function SetImageData(newimage : ImageData) {
 		uploadimage = newimage;
@@ -41,12 +41,32 @@
 	}
 	var multiplier = $state(0.5);
 
+    
+    var startX = $state(-1);
+    var startY = $state(-1);
+    var endX = $state(-1);
+    var endY = $state(-1);
+
+    function reset() {
+        startX = -1;
+        startY = -1;
+        endX = -1;
+        endY = -1;
+    }
+
     function clickEvent(canvas:HTMLCanvasElement, event:MouseEvent) {
             let rect = canvas.getBoundingClientRect();
             let x = event.clientX - rect.left;
             let y = event.clientY - rect.top;
             console.log("Coordinate x: " + x,
                 "Coordinate y: " + y);
+            if (startX == -1) {
+                startX = x;
+                startY = y;
+            } else if (endX == -1) {
+                endX = x;
+                endY = y;
+            }
     }
 
     onMount( () => {    // as soon as canvas is loaded, run this
@@ -66,10 +86,21 @@
 		<div>
 			<p>Image average: {imageaverage.toFixed(2)}</p>
 		</div>
+
+        <div>
+            <p>Start: {startX}, {startY}</p>
+            <p>End: {endX}, {endY}</p>
+        </div>
+
 		<div>
 			<p>Multiplier;</p>
 			{multiplier} <input type="range" min="0" max="2" step="0.01" bind:value={multiplier}/>
 		</div>
+
+        <div>
+            <button onclick={reset}>reset</button>
+
+        </div>
 		<div class="void"></div>
 	</div>
 </div>
