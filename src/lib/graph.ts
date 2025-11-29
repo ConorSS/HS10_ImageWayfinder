@@ -1,11 +1,11 @@
 class Graph {
-    private adj : number[][];
-    public constructor(vertices:number) {
+    private adj : any[];
+    public constructor(vertices:any) {
         this.adj = Array.from({ length: vertices }, () => []) as any;
     }
 
     // Function to add an edge between two vertices
-    addEdge(u:number, v:number, w:number) {
+    addEdge(u:any, v:any, w:any) {
         this.adj[u].push([v,w]);    // not functional, array is assumed to be 2D
         this.adj[v].push([u,w]);
     }
@@ -21,7 +21,6 @@ class Graph {
     }
 }
 
-function main() {
     // Create a graph with 3 vertices and 3 edges
     let graph = new Graph(3);
 
@@ -32,6 +31,3 @@ function main() {
 
     console.log("Adjacency List Representation:");
     graph.displayAdjList();
-}
-
-main();
