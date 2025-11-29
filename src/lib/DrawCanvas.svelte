@@ -1,12 +1,27 @@
-<script lang=ts>
-    import { onMount } from "svelte";
+<script lang="ts">
+	import { onMount } from "svelte";
 	import { Canvas, PencilBrush } from "fabric";
 
-	var canvas : HTMLCanvasElement;
-	var usercolour : string = $state("#000000");
-	var userwidth : number = $state(1);
-	
-	var fab : Canvas;
+	// Public accessor, through callback bc underlying methods need one
+	export function GetImageData(oncomplete: (v: ImageData | null) => {}) {
+		var image = new Image();
+		image.src = fab.toDataURL();
+		image.onload = () => {
+			// now place in a canvas and convert into image data
+			let canv = new OffscreenCanvas(canvas.height, canvas.width);
+			let ctx = canv.getContext("2d");
+			ctx?.drawImage(image, 0, 0);
+			oncomplete(
+				ctx?.getImageData(0, 0, canvas.height, canvas.width) ?? null,
+			);
+		};
+	}
+
+	var canvas: HTMLCanvasElement;
+	var usercolour: string = $state("#000000");
+	var userwidth: number = $state(1);
+
+	var fab: Canvas;
 
 	onMount(() => {
 		fab = new Canvas(canvas);
@@ -17,7 +32,7 @@
 	});
 
 	$effect(() => {
-		if ( !fab.freeDrawingBrush) return;
+		if (!fab.freeDrawingBrush) return;
 		fab.freeDrawingBrush.color = usercolour;
 		fab.freeDrawingBrush.width = userwidth;
 	});
@@ -27,22 +42,21 @@
 	}
 </script>
 
-<div id=bundle>
-	<canvas bind:this={canvas} width=400 height=400></canvas>
+<div id="bundle">
+	<canvas bind:this={canvas} width="400" height="400"></canvas>
 	<div class="vbox optionspanel">
 		<div>
 			<p>Brush colour</p>
-			<input type="color" bind:value={usercolour}/>
+			<input type="color" bind:value={usercolour} />
 		</div>
 		<div>
 			<p>Brush size</p>
-			<input type="number" bind:value={userwidth}/>
+			<input type="number" bind:value={userwidth} />
 		</div>
-		<div class=void></div>
+		<div class="void"></div>
 		<button onclick={Reset}>Reset</button>
 	</div>
 </div>
-
 
 <style>
 	canvas {
@@ -50,9 +64,9 @@
 	}
 
 	#bundle {
-		display:  flex;
+		display: flex;
 		flex-direction: row;
-		border : 1px solid black;
+		border: 1px solid black;
 	}
 
 	.vbox {
@@ -63,7 +77,7 @@
 			height: 100%;
 		}
 	}
-	.optionspanel>* {
+	.optionspanel > * {
 		padding: 8px;
 		display: flex;
 		flex-direction: column;
