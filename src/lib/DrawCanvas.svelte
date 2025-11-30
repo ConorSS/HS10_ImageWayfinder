@@ -26,10 +26,10 @@
 		fab.clear();
 	}
 
-	function RenderGraph() {
+	function RenderGraph(canv: Canvas) {
 		const spacer = 16;
-		const height = fab.height;
-		const width = fab.width;
+		const height = canv.height;
+		const width = canv.width;
 		let points: Circle[][] = [[]];
 		let x = 0;
 		let y = 0;
@@ -40,7 +40,7 @@
 				circle.setXY(new Point(j, i));
 				circle.backgroundColor = "rgb(255,0,0)";
 				circle.scale(4);
-				fab.add(circle);
+				canv.add(circle);
 				points[y].push(circle);
 				x++;
 			}
@@ -49,14 +49,17 @@
 
 		for(let y = 0; y < points.length; y++) {
 			for(let x = 0; x < points[y].length; x++) {
-				DrawValidEdges(x, y, points);
+				DrawValidEdges(x, y, points, canv);
 			}
 		}
-		fab.renderAll();
+		canv.renderAll();
 	}
 
-	function DrawValidEdges(x: number, y: number, points: Circle[][]) {
-		let ctx = canvas.getContext("2d", {willReadFrequently: true}) as CanvasRenderingContext2D;
+	let Render = () => {RenderGraph(fab)};
+
+	function DrawValidEdges(x: number, y: number, points: Circle[][], canv: Canvas) {
+		let canvasEl = canv.getElement();
+		let ctx = canvasEl.getContext("2d", {willReadFrequently: true}) as CanvasRenderingContext2D;
 		let img = ctx.getImageData(0, 0, 400, 400) as ImageData;
 		for (let yOffset = -1; yOffset < 2; yOffset++) {
 			let destY = y + yOffset;
@@ -76,7 +79,7 @@
 				line.stroke = "rgb(0,255,0)";
 				line.strokeWidth = 2;
 
-				fab.add(line);
+				canv.add(line);
 			}
 		}
 	}
@@ -85,12 +88,12 @@
 		let x = origin.x;
 		let y = origin.y;
 		while (x != dest.x || y != dest.y) {
-			if (imgData.data[3 + 4 * (x + y * 400)] > 0) {
+			if (imgData.data[3 + 4 * (x + y * imgData.width)] > 0) {
 				return false;
 			}
 			x = x == dest.x ? x : x + matX;
 			y = y == dest.y ? y : y + matY;
-			if (x > 400 || y > 400 || x < 0 || y < 0) return false;
+			if (x > imgData.width || y > imgData.height || x < 0 || y < 0) return false;
 		}
 		return true;
 	}
@@ -109,7 +112,7 @@
 		</div>
 		<div class=void></div>
 		<button onclick={Reset}>Reset</button>
-		<button onclick={RenderGraph}>Render Nodes and Edges</button>
+		<button onclick={Render}>Render Nodes and Edges</button>
 	</div>
 </div>
 
