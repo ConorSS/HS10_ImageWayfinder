@@ -1,5 +1,6 @@
-<script lang=ts>
-    import { onMount } from "svelte";
+<script lang="ts">
+  import {RenderGraph} from "$lib/RenderGraph.svelte";
+  import { onMount } from "svelte";
 	import { Canvas, PencilBrush } from "fabric";
 
 	var canvas : HTMLCanvasElement;
@@ -26,7 +27,12 @@
 		fab.clear();
 	}
 
+	let Render = () => {RenderGraph(fab)};
+
 </script>
+<a href="..">Return to index</a>
+
+<h1>Node Render Test</h1>
 
 <div id=bundle>
 	<canvas bind:this={canvas} width=400 height=400></canvas>
@@ -41,6 +47,7 @@
 		</div>
 		<div class=void></div>
 		<button onclick={Reset}>Reset</button>
+		<button onclick={Render}>Render Nodes and Edges</button>
 	</div>
 </div>
 
