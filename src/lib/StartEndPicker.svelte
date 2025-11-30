@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import Page from "../routes/+page.svelte";
 
 	var canv: HTMLCanvasElement;
 
@@ -110,7 +111,7 @@
                 startX = Math.trunc(x);
                 startY = Math.trunc(y);
 				ctx?.beginPath();
-				ctx?.arc(startX, startY, 10, 0, Math.PI*2)
+				ctx?.arc(startX, startY, 5, 0, Math.PI*2)
 				ctx?.stroke();
 				ctx?.fill();
 
@@ -120,12 +121,28 @@
                 endX = Math.trunc(x);
                 endY = Math.trunc(y);
 				ctx?.beginPath();
-				ctx?.arc(endX, endY, 10, 0, Math.PI*2)
+				ctx?.arc(endX, endY, 5, 0, Math.PI*2)
 				ctx?.stroke();
 				ctx?.fill();
             }
 		
     }
+
+	function displayStart() {
+		if (startX == -1 && startY == -1) {
+			return "Click to set co-ordinates...";
+		} else {
+			return startX + ", " + startY;
+		}
+	}
+
+	function displayEnd() {
+		if (endX == -1 && endY == -1) {
+			return "Click to set co-ordinates...";
+		} else {
+			return endX + ", " + endY;
+		}
+	}
 
     onMount( () => {    // as soon as canvas is loaded, run this
         canv.addEventListener("mousedown", function (e) {clickEvent(canv, e);})
@@ -146,8 +163,8 @@
 		</div>
 
         <div>
-            <p>Start: {startX}, {startY}</p>
-            <p>End: {endX}, {endY}</p>
+            <p>Start: {displayStart()}</p>
+            <p>End: {displayEnd()}</p>
         </div>
 
 		<div>
