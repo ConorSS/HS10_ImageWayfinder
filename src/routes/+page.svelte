@@ -1,9 +1,7 @@
-<h1>Welcome to ImageWayfinder</h1>
+<script>
+    import ImageWayfinder from "$lib/ImageWayfinder.svelte";
 
-<ul>
-	<li><a href="canvastest">Canvas test page</a></li>
-	<li><a href="binarizer">Image Binarizer</a></li>
-	<li><a href="imagetographtest">Image to Graph test</a></li>
-	
-</ul>
+</script>
+<h1>Wacky Wayfinder</h1>
 
+<ImageWayfinder/>
