@@ -93,21 +93,38 @@
         startY = -1;
         endX = -1;
         endY = -1;
+		// let ctx = canv.getContext("2d");
+		// ctx?.clearRect(0,0, WIDTH, HEIGHT);
     }
 
     function clickEvent(canvas:HTMLCanvasElement, event:MouseEvent) {
             let rect = canvas.getBoundingClientRect();
             let x = event.clientX - rect.left;
             let y = event.clientY - rect.top;
+			let ctx = canv.getContext("2d") as CanvasRenderingContext2D;
             console.log("Coordinate x: " + x,
                 "Coordinate y: " + y);
             if (startX == -1) {
+				ctx.strokeStyle = 'green';
+				ctx.fillStyle = 'green';
                 startX = Math.trunc(x);
                 startY = Math.trunc(y);
+				ctx?.beginPath();
+				ctx?.arc(startX, startY, 10, 0, Math.PI*2)
+				ctx?.stroke();
+				ctx?.fill();
+
             } else if (endX == -1) {
+				ctx.strokeStyle = 'red';
+				ctx.fillStyle = 'red';
                 endX = Math.trunc(x);
                 endY = Math.trunc(y);
+				ctx?.beginPath();
+				ctx?.arc(endX, endY, 10, 0, Math.PI*2)
+				ctx?.stroke();
+				ctx?.fill();
             }
+		
     }
 
     onMount( () => {    // as soon as canvas is loaded, run this
