@@ -2,18 +2,21 @@
 	import { onMount } from "svelte";
 	import { Canvas, PencilBrush } from "fabric";
 
+	let { imagedata = $bindable() } : { imagedata : ImageData | null } = $props();
+
 	// Public accessor, through callback bc underlying methods need one
-	export function GetImageData(oncomplete: (v: ImageData | null) => {}) {
+	function SetImageData() {
+		console.log("saving");
 		var image = new Image();
+		var height = canvas.height;
+		var width = canvas.width;
 		image.src = fab.toDataURL();
 		image.onload = () => {
 			// now place in a canvas and convert into image data
-			let canv = new OffscreenCanvas(canvas.height, canvas.width);
+			let canv = new OffscreenCanvas(height, width);
 			let ctx = canv.getContext("2d");
 			ctx?.drawImage(image, 0, 0);
-			oncomplete(
-				ctx?.getImageData(0, 0, canvas.height, canvas.width) ?? null,
-			);
+			imagedata = ctx?.getImageData(0, 0, height, width) ?? null;
 		};
 	}
 
@@ -43,7 +46,7 @@
 </script>
 
 <div id="bundle">
-	<canvas bind:this={canvas} width="400" height="400"></canvas>
+	<canvas bind:this={canvas} width="400" height="400" onmouseleave={SetImageData}></canvas>
 	<div class="vbox optionspanel">
 		<div>
 			<p>Brush colour</p>
