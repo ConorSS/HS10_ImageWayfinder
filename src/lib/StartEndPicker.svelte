@@ -41,6 +41,47 @@
 	}
 	var multiplier = $state(0.5);
 
+	$effect(() => {
+		var ctx = canv.getContext("2d");
+		if (!uploadimage) return;
+		ctx?.putImageData(uploadimage, 0, 0);
+		var imageclone = new ImageData(WIDTH,HEIGHT);
+		// collect average for threshold
+		var avg = 0;
+		for (var i = 0; i < uploadimage.data.length; i += 4) {
+			avg +=
+				uploadimage.data[i + 0] +
+				uploadimage.data[i + 1] +
+				uploadimage.data[i + 2];
+		}
+		avg /= imageclone.data.length / 3;
+		imageaverage = avg;
+		avg *= multiplier;
+		
+
+		for (var i = 0; i < uploadimage.data.length; i += 4) {
+			if (
+				uploadimage.data[i + 0] +
+					uploadimage.data[i + 1] +
+					uploadimage.data[i + 2] <
+				avg
+			) {
+				imageclone.data[i + 0] = 255;
+				imageclone.data[i + 1] = 0;
+				imageclone.data[i + 2] = 255;
+				imageclone.data[i + 3] = 255;
+			}
+			else {
+				imageclone.data[i + 0] = 
+				imageclone.data[i + 1] = 
+				imageclone.data[i + 2] = 
+				imageclone.data[i + 3] = 0;
+			}
+		}
+		ctx?.putImageData(imageclone, 0, 0);
+
+		outbuffer = ctx?.getImageData(0, 0, WIDTH, HEIGHT) ?? null;
+	});
     
     var startX = $state(-1);
     var startY = $state(-1);
@@ -61,11 +102,11 @@
             console.log("Coordinate x: " + x,
                 "Coordinate y: " + y);
             if (startX == -1) {
-                startX = x;
-                startY = y;
+                startX = Math.trunc(x);
+                startY = Math.trunc(y);
             } else if (endX == -1) {
-                endX = x;
-                endY = y;
+                endX = Math.trunc(x);
+                endY = Math.trunc(y);
             }
     }
 
