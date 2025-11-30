@@ -24,15 +24,27 @@
 		if (!uploadimage) return;
 		ctx?.putImageData(uploadimage, 0, 0);
 		var imageclone = new ImageData(WIDTH, HEIGHT);
-		// collect average for threshold
+		// collect median for threshold
 		var avg = 0;
+		var min = 99999;
+		var max = 0;
 		for (var i = 0; i < uploadimage.data.length; i += 4) {
-			avg +=
+			min = Math.min(
+				min,
 				uploadimage.data[i + 0] +
-				uploadimage.data[i + 1] +
-				uploadimage.data[i + 2];
+					uploadimage.data[i + 1] +
+					uploadimage.data[i + 2] +
+					uploadimage.data[i + 3],
+			);
+			max = Math.max(
+				max,
+				uploadimage.data[i + 0] +
+					uploadimage.data[i + 1] +
+					uploadimage.data[i + 2] +
+					uploadimage.data[i + 3],
+			);
 		}
-		avg /= imageclone.data.length / 3;
+		avg = max - min;
 		imageaverage = avg;
 		avg *= multiplier;
 
@@ -40,11 +52,12 @@
 			if (
 				uploadimage.data[i + 0] +
 					uploadimage.data[i + 1] +
-					uploadimage.data[i + 2] <
+					uploadimage.data[i + 2] +
+					uploadimage.data[i + 3] <=
 				avg
 			) {
 				imageclone.data[i + 0] = 255;
-				imageclone.data[i + 1] = 255;
+				imageclone.data[i + 1] = 0;
 				imageclone.data[i + 2] = 255;
 				imageclone.data[i + 3] = 255;
 			} else {
@@ -61,7 +74,8 @@
 </script>
 
 <div id="bundle">
-	<canvas width={WIDTH} height={HEIGHT} bind:this={canv} onload={canvasload}></canvas>
+	<canvas width={WIDTH} height={HEIGHT} bind:this={canv} onload={canvasload}
+	></canvas>
 	<div class="vbox optionspanel">
 		<div>
 			<p>Avg: {imageaverage.toFixed(2)}</p>
