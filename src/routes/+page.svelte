@@ -2,7 +2,7 @@
     import ImageWayfinder from "$lib/ImageWayfinder.svelte";
 
 </script>
-<h1>Welcome to ImageWayfinder</h1>
+<h1>Wacky Wayfinder</h1>
 
 <ImageWayfinder/>
 

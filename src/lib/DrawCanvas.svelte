@@ -33,6 +33,7 @@
 			image.src = evts.target.result as string;
 			image.onload = () => {
 				uploadimage = image;
+				fab.backgroundImage = new FabricImage(uploadimage);	
 			};
 		};
 		reader.readAsDataURL(evt.target.files[0]);
@@ -52,10 +53,10 @@
 	});
 
 	$effect(() => {
+		if (uploadimage) fab.backgroundImage = new FabricImage(uploadimage, {});	
 		if (!fab.freeDrawingBrush) return;
 		fab.freeDrawingBrush.color = usercolour;
 		fab.freeDrawingBrush.width = userwidth;
-		if (uploadimage) fab.backgroundImage = new FabricImage(uploadimage, {});	
 	});
 
 	function Reset() {
@@ -75,7 +76,7 @@
 			<input type="number" bind:value={userwidth} />
 		</div>
 		<div>
-			<p>Upload image;</p>
+			<p>Background image</p>
 			<input type="file" onchange={UpdateImage} />
 		</div>
 		<div class="void"></div>

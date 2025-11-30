@@ -16,25 +16,10 @@
 
 	var imageaverage = $state(0);
 	var outbuffer: ImageData | null = $state(null);
-	function UpdateImage(evt: any) {
-		// tack to SO post: https://stackoverflow.com/questions/7372637/grab-image-from-input-field-to-get-image-data-display-image
-		// this solution is awful, look at the amount of callbacks (so it'll do for now)
-		var reader = new FileReader();
-		reader.onload = function (evts) {
-			if (!evts.target) return;
-			const image = new Image();
-			image.src = evts.target.result as string;
-			image.onload = () => {
-				const c = new OffscreenCanvas(WIDTH, HEIGHT);
-				const cx = c.getContext("2d");
-				cx?.drawImage(image, 0, 0);
-				uploadimage = cx?.getImageData(0, 0, WIDTH, HEIGHT) ?? null;
-			};
-		};
-		reader.readAsDataURL(evt.target.files[0]);
-	}
 	var multiplier = $state(0.5);
-	$effect(() => {
+	$effect(canvasload);
+
+	function canvasload() {
 		var ctx = canv.getContext("2d");
 		if (!uploadimage) return;
 		ctx?.putImageData(uploadimage, 0, 0);
@@ -72,22 +57,17 @@
 		ctx?.putImageData(imageclone, 0, 0);
 
 		outbuffer = ctx?.getImageData(0, 0, WIDTH, HEIGHT) ?? null;
-	});
+	}
 </script>
 
 <div id="bundle">
-	<canvas width={WIDTH} height={HEIGHT} bind:this={canv}></canvas>
+	<canvas width={WIDTH} height={HEIGHT} bind:this={canv} onload={canvasload}></canvas>
 	<div class="vbox optionspanel">
 		<div>
-			<p>Upload image;</p>
-			<input type="file" onchange={UpdateImage} />
+			<p>Avg: {imageaverage.toFixed(2)}</p>
 		</div>
 		<div>
-			<p>Image average: {imageaverage.toFixed(2)}</p>
-		</div>
-		<div>
-			<p>Multiplier;</p>
-			{multiplier}
+			<p>Threshold: {multiplier.toFixed(2)}</p>
 			<input
 				type="range"
 				min="0"
@@ -120,5 +100,9 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+	}
+
+	input[type="range"] {
+		writing-mode: sideways-lr;
 	}
 </style>
