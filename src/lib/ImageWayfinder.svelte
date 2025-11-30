@@ -3,11 +3,11 @@
 	import Binarizer from "./Binarizer.svelte";
 	import DrawCanvas from "./DrawCanvas.svelte";
     import StartEndPicker from "./StartEndPicker.svelte";
+    import PixelPath from "./PixelPath.svelte";
 
 	var stage = $state(0);
 
 	let drawing = $state(null);
-	//$inspect(drawing);
 	let binmask = $state(null);
 	function update() {
 		if (drawcanvas) drawcanvas.SetImageData();
@@ -33,6 +33,13 @@
 				canGoForward = true;
 				// dump drawing into sendpicker
 				sendpicker?.SetImageData(drawing);
+				break;
+			case 3:
+				canGoBack = true;
+				canGoForward = false;
+				// dump many into pixpath
+				pixpath?.SetImageData(drawing);
+				pixpath?.SetMask(binmask);
 				break;
 			default:
 				canGoBack = false;
@@ -60,6 +67,8 @@
 				return "Filtering";
 			case 2:
 				return "Pick start and end";
+			case 3:
+				return "Find path";
 			default:
 				return "Undefined";
 		}
@@ -68,6 +77,7 @@
 	var drawcanvas: DrawCanvas | null = $state(null);
 	var binarizer: Binarizer | null = $state(null);
 	var sendpicker: StartEndPicker | null = $state(null);
+	var pixpath: PixelPath | null = $state(null);
 </script>
 
 <div id="multipanel" class="vbox">
@@ -75,7 +85,7 @@
 		<button onclick={DecrementStage} disabled={!canGoBack}>←</button>
 		<div class="vbox">
 			<span>{StageToName(stage)}</span>
-			<span>{stage + 1}/3</span>
+			<span>{stage + 1}/4</span>
 		</div>
 		<button onclick={IncrementStage} disabled={!canGoForward}>→</button>
 	</div>
@@ -83,9 +93,11 @@
 	{#if stage == 0}
 		<DrawCanvas bind:this={drawcanvas} bind:imagedata={drawing} />
 	{:else if stage == 1}
-		<Binarizer bind:this={binarizer} />
+		<Binarizer bind:this={binarizer} bind:mask={binmask}/>
 	{:else if stage == 2}
 		<StartEndPicker bind:this={sendpicker}/>
+	{:else if stage == 3}
+		<PixelPath bind:this={pixpath}/>
 	{:else}
 		<button onclick={ResetStage}>Return to drawcanvas</button>
 	{/if}

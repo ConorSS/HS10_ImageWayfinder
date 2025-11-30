@@ -3,6 +3,8 @@
 
 	var uploadimage: ImageData | null = $state(null);
 
+	let { mask = $bindable() } : { mask : ImageData | null } = $props();
+
 	export function SetImageData(newimage: ImageData) {
 		uploadimage = newimage;
 	}
@@ -70,6 +72,7 @@
 		ctx?.putImageData(imageclone, 0, 0);
 
 		outbuffer = ctx?.getImageData(0, 0, WIDTH, HEIGHT) ?? null;
+		mask = ctx?.getImageData(0, 0, WIDTH, HEIGHT) ?? null;
 	}
 </script>
 
