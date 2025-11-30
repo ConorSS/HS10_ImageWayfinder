@@ -158,19 +158,19 @@
 			<input type="file" onchange={UpdateImage} />
 			
 		</div>
-		<div>
+		<!-- <div>
 			<p>Image average: {imageaverage.toFixed(2)}</p>
-		</div>
+		</div> -->
 
         <div>
-            <p>Start: {displayStart()}</p>
-            <p>End: {displayEnd()}</p>
+            <h1>Start: {displayStart()}</h1>
+            <h1>End: {displayEnd()}</h1>
         </div>
-
+<!-- 
 		<div>
 			<p>Multiplier;</p>
 			{multiplier} <input type="range" min="0" max="2" step="0.01" bind:value={multiplier}/>
-		</div>
+		</div> -->
 
         <div>
             <button onclick={reset}>reset</button>
