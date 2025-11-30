@@ -1,18 +1,19 @@
 <script lang="ts">
 	var canv: HTMLCanvasElement;
 
-	export function SetImageData(newimage : ImageData) {
+	var uploadimage: ImageData | null = $state(null);
+
+	export function SetImageData(newimage: ImageData) {
 		uploadimage = newimage;
 	}
 
-	export function GetOutBuffer() : ImageData | null {
+	export function GetOutBuffer(): ImageData | null {
 		return outbuffer;
 	}
 
 	const WIDTH = 400;
 	const HEIGHT = 400;
 
-	var uploadimage: ImageData | null = $state(null);
 	var imageaverage = $state(0);
 	var outbuffer: ImageData | null = $state(null);
 	function UpdateImage(evt: any) {
@@ -30,7 +31,6 @@
 				uploadimage = cx?.getImageData(0, 0, WIDTH, HEIGHT) ?? null;
 			};
 		};
-		console.log(evt.target.files[0]);
 		reader.readAsDataURL(evt.target.files[0]);
 	}
 	var multiplier = $state(0.5);
@@ -38,7 +38,7 @@
 		var ctx = canv.getContext("2d");
 		if (!uploadimage) return;
 		ctx?.putImageData(uploadimage, 0, 0);
-		var imageclone = new ImageData(WIDTH,HEIGHT);
+		var imageclone = new ImageData(WIDTH, HEIGHT);
 		// collect average for threshold
 		var avg = 0;
 		for (var i = 0; i < uploadimage.data.length; i += 4) {
@@ -50,7 +50,6 @@
 		avg /= imageclone.data.length / 3;
 		imageaverage = avg;
 		avg *= multiplier;
-		
 
 		for (var i = 0; i < uploadimage.data.length; i += 4) {
 			if (
@@ -60,14 +59,13 @@
 				avg
 			) {
 				imageclone.data[i + 0] = 255;
-				imageclone.data[i + 1] = 0;
+				imageclone.data[i + 1] = 255;
 				imageclone.data[i + 2] = 255;
 				imageclone.data[i + 3] = 255;
-			}
-			else {
-				imageclone.data[i + 0] = 
-				imageclone.data[i + 1] = 
-				imageclone.data[i + 2] = 
+			} else {
+				imageclone.data[i + 0] = 0;
+				imageclone.data[i + 1] = 0;
+				imageclone.data[i + 2] = 0;
 				imageclone.data[i + 3] = 0;
 			}
 		}
@@ -83,14 +81,20 @@
 		<div>
 			<p>Upload image;</p>
 			<input type="file" onchange={UpdateImage} />
-			
 		</div>
 		<div>
 			<p>Image average: {imageaverage.toFixed(2)}</p>
 		</div>
 		<div>
 			<p>Multiplier;</p>
-			{multiplier} <input type="range" min="0" max="2" step="0.01" bind:value={multiplier}/>
+			{multiplier}
+			<input
+				type="range"
+				min="0"
+				max="2"
+				step="0.01"
+				bind:value={multiplier}
+			/>
 		</div>
 		<div class="void"></div>
 	</div>

@@ -6,7 +6,11 @@
 	var stage = $state(0);
 
 	let drawing = $state(null);
+	//$inspect(drawing);
 	let binmask = $state(null);
+	function update() {
+		if (drawcanvas) drawcanvas.SetImageData();
+	}
 
 	// tried doing min/max on increment/decrement functions. didn't work. table time
 	var canGoBack = $state(false);
@@ -34,9 +38,11 @@
 		stage = 0;
 	}
 	function IncrementStage() {
+		update();
 		stage++;
 	}
 	function DecrementStage() {
+		update();
 		stage--;
 	}
 	function StageToName(stage) {
