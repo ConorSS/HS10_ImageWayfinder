@@ -2,6 +2,7 @@
 	import { draw } from "svelte/transition";
 	import Binarizer from "./Binarizer.svelte";
 	import DrawCanvas from "./DrawCanvas.svelte";
+    import StartEndPicker from "./StartEndPicker.svelte";
 
 	var stage = $state(0);
 
@@ -25,7 +26,13 @@
 				canGoBack = true;
 				canGoForward = true;
 				// dump drawing into binarizer
-				binarizer.SetImageData(drawing);
+				binarizer?.SetImageData(drawing);
+				break;
+			case 2:
+				canGoBack = true;
+				canGoForward = true;
+				// dump drawing into sendpicker
+				sendpicker?.SetImageData(drawing);
 				break;
 			default:
 				canGoBack = false;
@@ -51,6 +58,8 @@
 				return "Drawing";
 			case 1:
 				return "Filtering";
+			case 2:
+				return "Pick start and end";
 			default:
 				return "Undefined";
 		}
@@ -58,6 +67,7 @@
 
 	var drawcanvas: DrawCanvas | null = $state(null);
 	var binarizer: Binarizer | null = $state(null);
+	var sendpicker: StartEndPicker | null = $state(null);
 </script>
 
 <div id="multipanel" class="vbox">
@@ -74,6 +84,8 @@
 		<DrawCanvas bind:this={drawcanvas} bind:imagedata={drawing} />
 	{:else if stage == 1}
 		<Binarizer bind:this={binarizer} />
+	{:else if stage == 2}
+		<StartEndPicker bind:this={sendpicker}/>
 	{:else}
 		<button onclick={ResetStage}>Return to drawcanvas</button>
 	{/if}
